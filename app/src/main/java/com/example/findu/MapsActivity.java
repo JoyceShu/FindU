@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.tasks.Task;
+
 import com.google.android.libraries.places.api.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,6 +40,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+
 import java.util.Collections;
 import java.util.List;
 
@@ -47,13 +50,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ActivityMapsBinding binding;
     BottomNavigationView bottomNav;
 
-
     //user set map type
     Spinner spinner_mapType;
 
     private boolean locationPermissionGranted;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +70,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         // Initialize the SDK
         Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
         // Create a new PlacesClient instance
         PlacesClient placesClient = Places.createClient(this);
+
+        Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
 
         // set bottom navigation connection
         bottomNav = findViewById(R.id.bottom_nav);
@@ -127,6 +131,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                }
 //            });
 //        }
+
     }
 
     /**
@@ -147,6 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Kyiv"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
+        getLocationPermission();
 
     }
 
@@ -154,6 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String itemSelected = adapterView.getItemAtPosition(i).toString();
         Toast.makeText(this, itemSelected, Toast.LENGTH_SHORT).show();
+
         if (itemSelected.equals("Normal")) {
             Log.v("map type select", itemSelected);
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -164,6 +171,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         else if (itemSelected.equals("Terrain")) {
             Log.v("map type select", itemSelected);
+
+        if (itemSelected.equals("Normal")) {
+            Log.v("maptype select", itemSelected);
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+        else if (itemSelected.equals("Satellite")) {
+            Log.v("maptype select", itemSelected);
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        }
+        else if (itemSelected.equals("Terrain")) {
+            Log.v("maptype select", itemSelected);
+
             mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         }
     }
@@ -176,11 +195,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          */
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 ACCESS_FINE_LOCATION)
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{ACCESS_FINE_LOCATION},
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
